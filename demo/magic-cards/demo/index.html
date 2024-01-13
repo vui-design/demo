@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>示例</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      html, body { width:100%; height:100%; margin:0; padding:0; overflow:hidden; }
+      img { position:fixed; top:0; left:0; }
+    </style>
+  </head>
+
+  <body>
+    <img id="card" src="" />
+    <script>
+      const getUrlParameter = function(url, name) {
+        const search = url.substring(url.indexOf("?"));
+        const queryString = search.substring(1);
+
+        if (queryString) {
+          const pattern = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+          const matchValue = queryString.match(pattern);
+
+          return matchValue != null ? unescape(matchValue[2]) : null;
+        }
+
+        return null;
+      };
+      
+      const getClientToScreen = function(x, y) {
+        const screenX = x + window.screenX;
+        const screenY = y + window.screenY + (window.outerHeight - window.innerHeight);
+
+        return [screenX, screenY];
+      };
+      const getScreenToClient = function(x, y) {
+        const clientX = x - window.screenX;
+        const clientY = y - window.screenY - (window.outerHeight - window.innerHeight);
+
+        return [clientX, clientY];
+      };
+
+      const channel = new BroadcastChannel("card");
+      const cardId = getUrlParameter(window.location.href, "card");
+      const card = document.getElementById("card");
+
+      channel.onmessage = function(e) {
+        const clientPoints = getScreenToClient(...e.data);
+
+        card.style.left = clientPoints[0] + "px";
+        card.style.top = clientPoints[1] + "px";
+      };
+
+      card.setAttribute("src", cardId + ".jpg");
+      card.onmousedown = function(e) {
+        e.preventDefault();
+
+        let x = e.pageX - card.offsetLeft;
+        let y = e.pageY - card.offsetTop;
+
+        window.onmousemove = function(e) {
+          const cx = e.pageX - x;
+          const cy = e.pageY - y;
+
+          card.style.left = cx + "px";
+          card.style.top = cy + "px";
+
+          const screenPoints = getClientToScreen(cx, cy);
+
+          channel.postMessage(screenPoints);
+        };
+
+        window.onmouseup = function(e) {
+          window.onmousemove = null;
+          window.onmouseup = null;
+        };
+      };
+
+      if (cardId == "1") {
+        const screenPoints = getClientToScreen(0, 0);
+
+        channel.postMessage(screenPoints);
+      }
+    </script>
+  </body>
+</html>
