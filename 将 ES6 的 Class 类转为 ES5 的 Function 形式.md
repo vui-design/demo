@@ -1,4 +1,4 @@
-请将下例中 ES6 的 Class 类转为 ES5 的 Function 形式：
+##### 请将下例中 ES6 的 Class 类转为 ES5 的 Function 形式：
 
 ```javascript
 class Person {
@@ -20,7 +20,7 @@ Person("zhangsan"); // => Uncaught TypeError: Class constructor Person cannot be
 new Person.prototype.say(); // => Uncaught TypeError: Person.prototype.say is not a constructor
 ```
 
-转为 ES5 的 Function 形式后为：
+##### 转为 ES5 的 Function 形式后为：
 
 ```javascript
 "use strict"; // 使用严格模式
@@ -28,7 +28,7 @@ new Person.prototype.say(); // => Uncaught TypeError: Person.prototype.say is no
 function Person(name) {
   // 构造函数仅支持使用 new 关键字调用
   if (!new.target) {
-    throw new TypeError(`Class constructor Person cannot be invoked without 'new'`);
+      throw new TypeError(`Class constructor Person cannot be invoked without 'new'`);
   }
   
   this.name = name;
