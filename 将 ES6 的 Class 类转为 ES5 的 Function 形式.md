@@ -1,4 +1,4 @@
-##### 请将下例中 ES6 的 Class 类转为 ES5 的 Function 形式：
+#### 请将下例中 ES6 的 Class 类转为 ES5 的 Function 形式：
 
 ```javascript
 class Person {
@@ -20,7 +20,7 @@ Person("zhangsan"); // => Uncaught TypeError: Class constructor Person cannot be
 new Person.prototype.say(); // => Uncaught TypeError: Person.prototype.say is not a constructor
 ```
 
-##### 转为 ES5 的 Function 形式后为：
+#### 转为 ES5 的 Function 形式后为：
 
 ```javascript
 "use strict"; // 使用严格模式
